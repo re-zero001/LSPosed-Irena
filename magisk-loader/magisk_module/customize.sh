@@ -76,7 +76,7 @@ fi
 ui_print "- Extracting module files"
 
 extract "$ZIPFILE" 'module.prop'        "$MODPATH"
-if [ -z "$APATCH" ] && [ -z "$KSU" ]; then
+if [ "$MAGISK_VER_CODE" ]; then
   extract "$ZIPFILE" 'action.sh'          "$MODPATH"
 fi
 extract "$ZIPFILE" 'post-fs-data.sh'    "$MODPATH"
