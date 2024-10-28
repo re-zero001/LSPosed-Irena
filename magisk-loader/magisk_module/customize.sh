@@ -76,7 +76,9 @@ fi
 ui_print "- Extracting module files"
 
 extract "$ZIPFILE" 'module.prop'        "$MODPATH"
-extract "$ZIPFILE" 'action.sh'          "$MODPATH"
+if [ -z "$APATCH" ] && [ -z "$KSU" ]; then
+  extract "$ZIPFILE" 'action.sh'          "$MODPATH"
+fi
 extract "$ZIPFILE" 'post-fs-data.sh'    "$MODPATH"
 extract "$ZIPFILE" 'service.sh'         "$MODPATH"
 extract "$ZIPFILE" 'uninstall.sh'       "$MODPATH"
@@ -87,7 +89,7 @@ extract "$ZIPFILE" 'daemon'             "$MODPATH"
 rm -f /data/adb/lspd/manager.apk
 extract "$ZIPFILE" 'manager.apk'        "$MODPATH"
 
-if [ "$BOOTMODE" ] &&[ "$KSU" ]; then
+if [ "$APATCH" ] || [ "$KSU" ]; then
   mkdir -p "$MODPATH/webroot"
   extract "$ZIPFILE" "webroot/index.html" "$MODPATH/webroot" true
   # evaluate if use awk or tr -s ' ' | cut -d' ' -f5
