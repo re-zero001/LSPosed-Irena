@@ -61,9 +61,17 @@ public final class DirectAccessService extends BaseService {
     public byte[] readFile(String filename) throws IOException {
         File file = new File(filename);
         byte content[] = new byte[(int) file.length()];
-        FileInputStream fis = new FileInputStream(file);
-        fis.read(content);
-        fis.close();
+        try (FileInputStream fis = new FileInputStream(file)) {
+        int bytesRead = 0;
+        int offset = 0;
+        int remaining = content.length;
+        
+        // Read in a loop until end of file or all bytes have been read
+        while (offset < content.length && (bytesRead = fis.read(content, offset, remaining)) != -1) {
+            offset += bytesRead;
+            remaining -= bytesRead;
+        }
+    }
         return content;
     }
 
