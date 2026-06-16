@@ -119,10 +119,18 @@ namespace lspd {
             lsplant::InitInfo initInfo{
                 .inline_hooker = [](auto t, auto r) {
                     void* bk = nullptr;
+#ifdef __riscv
+                    return HookFunction(t, r, &bk) == 0 ? bk : nullptr;
+#else
                     return HookFunction(t, r, &bk) == RS_SUCCESS ? bk : nullptr;
+#endif
                 },
                 .inline_unhooker = [](auto t) {
+#ifdef __riscv
+                    return true;
+#else
                     return UnhookFunction(t) == RT_SUCCESS ;
+#endif
                 },
                 .art_symbol_resolver = [](auto symbol) {
                     return GetArt()->getSymbAddress(symbol);
@@ -198,10 +206,18 @@ namespace lspd {
             lsplant::InitInfo initInfo{
                     .inline_hooker = [](auto t, auto r) {
                         void* bk = nullptr;
+#ifdef __riscv
+                        return HookFunction(t, r, &bk) == 0 ? bk : nullptr;
+#else
                         return HookFunction(t, r, &bk) == RS_SUCCESS ? bk : nullptr;
+#endif
                     },
                     .inline_unhooker = [](auto t) {
+#ifdef __riscv
+                        return true;
+#else
                         return UnhookFunction(t) == RT_SUCCESS;
+#endif
                     },
                     .art_symbol_resolver = [](auto symbol){
                         return GetArt()->getSymbAddress(symbol);

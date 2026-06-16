@@ -11,5 +11,13 @@ add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_include_directories(${PROJECT_NAME} PRIVATE src)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC dobby lsplant_static log fmt-header-only)
+set(${PROJECT_NAME}_LINK_LIBS lsplant_static log fmt-header-only)
+
+if (ANDROID_ABI STREQUAL "riscv64")
+	set(${PROJECT_NAME}_LINK_LIBS ${${PROJECT_NAME}_LINK_LIBS} rv64hook-static)
+else ()
+	set(${PROJECT_NAME}_LINK_LIBS ${${PROJECT_NAME}_LINK_LIBS} dobby)
+endif ()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC ${${PROJECT_NAME}_LINK_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE dex_builder_static)

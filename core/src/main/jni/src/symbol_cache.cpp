@@ -24,7 +24,11 @@
 
 #include "symbol_cache.h"
 #include "elf_util.h"
+#ifdef __riscv
+#include <rv64hook.h>
+#else
 #include <dobby.h>
+#endif
 #include "macros.h"
 #include "config.h"
 #include <vector>

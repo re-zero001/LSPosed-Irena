@@ -19,7 +19,11 @@
  */
 
 #include <dlfcn.h>
+#ifdef __riscv
+#include <rv64hook.h>
+#else
 #include "dobby.h"
+#endif
 #include <sys/mman.h>
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
@@ -83,7 +87,12 @@ inline int HookFunction(void *original, void *replace, void **backup) {
              info.dli_sname ? info.dli_sname : "(unknown symbol)", info.dli_saddr,
              info.dli_fname ? info.dli_fname : "(unknown file)", info.dli_fbase);
     }
+#ifdef __riscv
+    rv64hook::ScopedRWXMemory rwx(original);
+    return rv64hook::InlineHook(original, replace, backup) != nullptr ? 0 : -1;
+#else
     return DobbyHook(original, reinterpret_cast<dobby_dummy_func_t>(replace), reinterpret_cast<dobby_dummy_func_t *>(backup));
+#endif
 }
 
 inline int UnhookFunction(void *original) {
@@ -94,7 +103,13 @@ inline int UnhookFunction(void *original) {
              info.dli_sname ? info.dli_sname : "(unknown symbol)", info.dli_saddr,
              info.dli_fname ? info.dli_fname : "(unknown file)", info.dli_fbase);
     }
+#ifdef __riscv
+    rv64hook::ScopedRWXMemory rwx(original);
+    rv64hook::InlineUnhook(original);
+    return 0;
+#else
     return DobbyDestroy(original);
+#endif
 }
 
 inline std::string GetNativeBridgeSignature() {

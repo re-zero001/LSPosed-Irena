@@ -59,6 +59,7 @@ This fork won't have.
 - [EdXposed](https://github.com/ElderDrivers/EdXposed): LSPosed fork source
 - [xz_embedded](https://github.com/tukaani-project/xz-embedded):decompress debug_info section into stripped libraries
 - [system_properties](https://github.com/topjohnwu/system_properties):switch properties access within LSPosed
+- [riscv64-inline-hook](https://github.com/eirv/riscv64-inline-hook): inline hooker for `RISC-V 64`
 - ~[SandHook](https://github.com/ganyao114/SandHook/): ART hooking framework for SandHook variant~
 - ~[YAHFA](https://github.com/rk700/YAHFA): previous ART hooking framework~
 - ~[dexmaker](https://github.com/linkedin/dexmaker) and [dalvikdx](https://github.com/JakeWharton/dalvik-dx): to dynamically generate YAHFA hooker classes~

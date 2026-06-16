@@ -1,5 +1,9 @@
 project(external)
 
+if (ANDROID_ABI STREQUAL "riscv64")
+	set(ANDROID_PLATFORM "android-35")
+endif ()
+
 macro(SET_OPTION option value)
     set(${option} ${value} CACHE INTERNAL "" FORCE)
 endmacro()
@@ -159,6 +163,10 @@ link_libraries(xz_embedded)
 
 OPTION(LSPLANT_BUILD_SHARED OFF)
 add_subdirectory(lsplant/lsplant/src/main/jni)
-add_subdirectory(dobby)
+if (ANDROID_ABI STREQUAL "riscv64")
+	add_subdirectory(riscv64-inline-hook)
+else ()
+	add_subdirectory(dobby)
+endif ()
 add_subdirectory(fmt)
 target_compile_definitions(fmt-header-only INTERFACE FMT_STATIC_THOUSANDS_SEPARATOR=1 FMT_USE_FLOAT=0 FMT_USE_DOUBLE=0 FMT_USE_LONG_DOUBLE=0)

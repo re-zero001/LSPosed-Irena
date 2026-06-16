@@ -27,7 +27,11 @@
 #include "symbol_cache.h"
 #include "utils/hook_helper.hpp"
 #include <sys/mman.h>
+#ifdef __riscv
+#include <rv64hook.h>
+#else
 #include <dobby.h>
+#endif
 #include <list>
 #include <dlfcn.h>
 #include "native_util.h"
@@ -76,7 +80,11 @@ namespace lspd {
             return InstallNativeAPI(lsplant::InitInfo{
                 .inline_hooker = [](auto t, auto r) {
                     void* bk = nullptr;
+#ifdef __riscv
+                    return HookFunction(t, r, &bk) == 0 ? bk : nullptr;
+#else
                     return HookFunction(t, r, &bk) == RS_SUCCESS ? bk : nullptr;
+#endif
                 },
                 .art_symbol_resolver = [](auto symbol) {
                     return SandHook::ElfImg("/linker").getSymbAddress(symbol);},.art_symbol_prefix_resolver = [](auto symbol) {

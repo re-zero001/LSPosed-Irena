@@ -21,7 +21,11 @@
 // Created by loves on 2/7/2021.
 //
 
+#ifdef __riscv
+#include <rv64hook.h>
+#else
 #include <dobby.h>
+#endif
 #include <thread>
 #include <atomic>
 #include "loader.h"
